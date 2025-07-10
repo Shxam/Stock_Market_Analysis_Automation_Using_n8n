@@ -1,0 +1,323 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4d974b67-6a0f-4028-91fc-8e99b7a34b06",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e57b51b9-74e4-4729-8ae6-625ef0f9a60f",
+              "leftValue": "={{$json.use_apis}}! == true",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "ccb48d15-1204-4d4c-9772-890a5fed5299",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reuters.com/business/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.9"
+            },
+            {
+              "name": "Referer",
+              "value": "https://www.google.com/"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        160
+      ],
+      "id": "f6dd3b50-6494-401a-ab6f-6a0471bba150",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"values\": {\n    \"mode\": \"hybrid\",\n    \"market\": \"India\",\n    \"use_apis\": true,\n    \"api_keys\": {\n      \"news_api\": \"{{$env.NEWS_API_KEY}}\",\n      \"alpha_vantage\": \"{{$env.ALPHA_VANTAGE_KEY}}\",\n      \"fmp_api\": \"{{$env.FMP_API_KEY}}\",\n      \"rapid_api\": \"{{$env.RAPID_API_KEY}}\",\n      \"twitter_bearer\": \"{{$env.TWITTER_BEARER_TOKEN}}\"\n    },\n    \"whatsapp_config\": {\n      \"use_free_service\": true,\n      \"callmebot_api_key\": \"{{$env.CALLMEBOT_API_KEY}}\",\n      \"phone_number\": \"{{$env.WHATSAPP_PHONE_NUMBER}}\",\n      \"business_api_token\": \"{{$env.WHATSAPP_BUSINESS_TOKEN}}\"\n    },\n    \"preferences\": {\n      \"risk_tolerance\": \"moderate\",\n      \"investment_horizon\": \"1-3 years\",\n      \"sectors_focus\": [\"IT\", \"Banking\", \"Healthcare\", \"Energy\"],\n      \"include_smallcap\": true,\n      \"include_mutual_funds\": true,\n      \"include_ipos\": true,\n      \"max_recommendations\": 10,\n      \"min_confidence\": 70\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "8c2e7297-9618-4934-984e-811843236f34",
+      "name": "Set Configuration Node"
+    },
+    {
+      "parameters": {
+        "url": "https://query1.finance.yahoo.com/v8/finance/chart/RELIANCE.NS?range=5d&interval=1d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        160
+      ],
+      "id": "3d1adc86-80e3-4abf-a4e7-5561128a9e82",
+      "name": "HTTP Request - Yahoo Finance (Free)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.moneycontrol.com/india/stockpricequote/refineries/relianceindustries/RI",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        160
+      ],
+      "id": "70297a02-706b-4016-b044-daf3e09ca746",
+      "name": "HTTP Request - Moneycontrol Scraping (Free)"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/IndiaInvestments+stocks+investing/.json?limit=50",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        160
+      ],
+      "id": "e9957bc5-3672-4c60-bc3e-bbb9057b833b",
+      "name": "HTTP Request - Reddit Free Sentiment"
+    },
+    {
+      "parameters": {
+        "url": "https://latest-mutual-fund-nav.p.rapidapi.com/master",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "RTA_Agent_Code",
+              "value": "CAMS"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "latest-mutual-fund-nav.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "10d909a2femshe83d2627ea85023p185465jsn3460cadce21f"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1480,
+        160
+      ],
+      "id": "05fed054-8dcd-4aff-b60f-865208f5ad72",
+      "name": "HTTP Request - Value Research Free"
+    },
+    {
+      "parameters": {
+        "url": "https://www.chittorgarh.com/ipo/ipo_list_2025.asp",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        160
+      ],
+      "id": "382f1567-73ac-4d5f-8341-5dff55cdb547",
+      "name": "HTTP Request - Chittorgarh IPO (Free)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        160
+      ],
+      "id": "1fbdb297-6226-49aa-9dd2-8a808a8e180f"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set Configuration Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Configuration Node": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Yahoo Finance (Free)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Yahoo Finance (Free)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Moneycontrol Scraping (Free)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Moneycontrol Scraping (Free)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Reddit Free Sentiment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Reddit Free Sentiment": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Value Research Free",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Value Research Free": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Chittorgarh IPO (Free)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Chittorgarh IPO (Free)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "6520650a-093b-4b9f-9540-4fdd9398b35d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "df7dc23128a0f9089005671084514b63091e79db5746bda6dd278f753c30fb37"
+  },
+  "id": "x9RXJaU5iWaxCBgB",
+  "tags": []
+}
